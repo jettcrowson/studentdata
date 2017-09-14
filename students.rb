@@ -150,13 +150,13 @@ end
 def donatableBloodTypes(bloodtype)
     case bloodtype
     when "A"
-        return "A, AB"
+        return ["O", "A"]
     when "B"
-            return "B, AB"
+            return ["O", "B"]
     when "O"
-        return "O, A, B, AB"
+        return ["O"]
     else
-        return "AB"
+        return ["AB", "O", "B", "A"]
     end
 end
 
@@ -168,6 +168,40 @@ def nameToBloodtype(name, bloodList, students)
     end
 
     return "O"
+end
+
+def bloodStudents(students, bloodList, desiredBloodtype)
+    donors = []
+    donatableBloodTypes(desiredBloodtype).each do |types|
+        students.each do |name|
+            if types == nameToBloodtype(name, bloodList, students)
+                donors.push(name)
+            else
+            end
+        end
+    end
+
+    return donors
+end
+
+def mostDonors(students, bloodtypes)
+    mostDonors = []
+    donorNumber = 0
+
+    students.each do |name|
+        if bloodStudents(students, bloodtypes, nameToBloodtype(name, bloodtypes, students)).length > donorNumber
+
+            mostDonors = [name]
+            donorNumber = bloodStudents(students, bloodtypes, nameToBloodtype(name, bloodtypes, students)).length
+
+        elsif bloodStudents(students, bloodtypes, nameToBloodtype(name, bloodtypes, students)).length == donorNumber
+
+            mostDonors.push(name)
+
+        end
+    end
+
+    return [mostDonors, donorNumber]
 end
 
 puts "-----"
@@ -205,5 +239,19 @@ puts "-----"
 puts "Which green eyed students are closest to the average?"
 puts closestToAgeByEyeColor("green", eyeColors, students, ages)
 
-puts "What bloodtype can the student donate to?"
-puts donatableBloodTypes(nameToBloodtype("Dan", bloodtypes, students))
+puts "-----"
+
+puts "What bloodtype can the student recieve dontations from?"
+puts donatableBloodTypes(nameToBloodtype("Alice", bloodtypes, students))
+
+puts "-----"
+
+puts "Which students can donate to our student?"
+puts bloodStudents(students, bloodtypes, nameToBloodtype("Alice", bloodtypes, students))
+
+puts "-----"
+
+puts "The students with the most donors were"
+puts mostDonors(students, bloodtypes)[0]
+puts "With this many donors each"
+puts mostDonors(students, bloodtypes)[1]
