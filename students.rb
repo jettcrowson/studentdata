@@ -278,6 +278,26 @@ def mostDonors(students, bloodtypes)
     return [mostDonors, donorNumber]
 end
 
+def writeToFile(content, name)
+
+    outFile = File.new("#{name}.txt", "w")
+    outFile.puts(content)
+    outFile.close
+
+end
+
+def secondLetterSort(students)
+    orderedNames = [students[0]]
+    secondLetterNames = []
+    putFirstBack = []
+
+    students.each{ |student| secondLetterNames.push(student.split("").drop(1).push(student[0]).join(""))}
+
+    secondLetterNames.sort.each{ |name| putFirstBack.push(name.split("").take(name.length-1).unshift(name[name.length-1]).join(""))}
+
+    return putFirstBack
+end
+
 puts "-----"
 
 puts "How many students have brown eyes?"
@@ -329,3 +349,7 @@ puts "The students with the most donors were"
 puts mostDonors(students, bloodtypes)[0]
 puts "With this many donors each"
 puts mostDonors(students, bloodtypes)[1]
+writeToFile(mostDonors(students, bloodtypes), "problem7")
+
+puts "Sort the students in alphebetical order according to the second letter of their names."
+puts secondLetterSort(students)
