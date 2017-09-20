@@ -9,37 +9,62 @@ end
 
 def fetchAttribute(objList, attribute)
     attributeList = []
-    objList.each{ |obj| attributeList.push(obj.public_send(attribute))}
+
+    objList.each do |obj|
+        attributeList.push(obj.public_send(attribute))
+    end
+
     return attributeList
 end
 
 def eyeColorStudents(color, students)
     studentsWithEyeColor = []    
-    students.each_with_index{ |student, i| if student.eyeColor.downcase == color.downcase then studentsWithEyeColor.push(student) end}
-    return [studentsWithEyeColor.length, studentsWithEyeColor]
+        students.each_with_index do |student, i|
+            if student.eyeColor.downcase == color.downcase
+                studentsWithEyeColor.push(student)
+            end    
+        end
+        return [studentsWithEyeColor.length, studentsWithEyeColor]
 end
 
 def oldEnoughToDrive(students)
     oldEnough = []
-    students.each_with_index{ |student, i| if student.age >= 16 then oldEnough.push(student.name) end}
+        students.each_with_index do |student, i|
+            if student.age >= 16
+                oldEnough.push(student.name)
+            end
+        end
     return oldEnough
 end
 
 def vowelCounter(word)
-    vowels, vowelList = 0, ["a", "e", "i", "o", "u"]
-    word.split("").each{ |letter| if vowelList.include?(letter.downcase) then vowels += 1 end}
+        vowels = 0
+        vowelList = ["a", "e", "i", "o", "u"]
+        word.split("").each do |letter|
+            if vowelList.include?(letter.downcase)
+                vowels += 1
+            end
+        end
     return vowels
 end
 
 def studentsOfAge(age, students)
-    studentsMatchingAge = []
-    students.each_with_index{ |student,i| if student.age == age then studentsMatchingAge.push(student) end}
+        studentsMatchingAge = []
+        students.each_with_index do |student,i|
+            if student.age == age
+                studentsMatchingAge.push(student)
+            end
+        end
     return studentsMatchingAge
 end
 
 def mostVowelsSophomores(students)
-    longest = ""
-    studentsOfAge(15, students).each{ |student| if vowelCounter(student.name) > vowelCounter(longest) then longest = student.name end}
+        longest = ""
+        studentsOfAge(15, students).each do |student|
+            if vowelCounter(student.name) > vowelCounter(longest)
+                longest = student.name
+            end
+        end
     return longest
 end
 
@@ -49,7 +74,9 @@ end
 
 def average(list)
     total = 0.0
-    list.each{ |item| total += item}
+    list.each do |item|
+        total += item
+    end
     return total / list.length
 end
 
@@ -64,21 +91,20 @@ def averageAge(students)
     students.each{ |student| ages.push(student.age)} 
     return average(ages)
 end
-
 def closestToAgeByEyeColor(color, students)
-    closestStudents = []
-    average = averageAge(eyeColorStudents(color, students)[1])
-    studentsList = eyeColorStudents(color, students)[1]
-    ages = fetchAttribute(students, "age")
-    closest = [studentsList[0]]
-    studentsList.each do |student|
-        if (average - student.age).abs < (average - closest[0].age).abs
-            closest = []
-            closest.push(student)
-        elsif (average - student.age).abs == (average - closest[0].age).abs
-            closest.push(student)
+        closestStudents = []
+        average = averageAge(eyeColorStudents(color, students)[1])
+        studentsList = eyeColorStudents(color, students)[1]
+        ages = fetchAttribute(students, "age")
+        closest = [studentsList[0]]
+        studentsList.each do |student|
+            if (average - student.age).abs < (average - closest[0].age).abs
+                closest = []
+                closest.push(student)
+            elsif (average - student.age).abs == (average - closest[0].age).abs
+                closest.push(student)
+            end
         end
-    end
     return fetchAttribute(closest, "name")
 end
 
@@ -96,27 +122,38 @@ def donatableBloodTypes(bloodtype)
 end
 
 def nameToBloodtype(name, students)
-    students.each_with_index{ |student, i| if student.name == name then return student.bloodtype end}
+    students.each_with_index do |student, i|
+        if student.name == name
+            return student.bloodtype
+        end
+    end
     return "O"
 end
 
 def bloodStudents(students, desiredBloodtype)
-    donors = []
-    donatableBloodTypes(desiredBloodtype).each{ |types| students.each{ |student| if types == nameToBloodtype(student.name, students) then donors.push(student) end}}
+        donors = []
+        donatableBloodTypes(desiredBloodtype).each do |types|
+            
+            students.each do |student|
+                if types == nameToBloodtype(student.name, students)
+                    donors.push(student)
+                end
+            end
+        end
     return donors
 end
 
 def mostDonors(students)
-    mostDonors = []
-    donorNumber = 0
-    students.each do |student|
-        if bloodStudents(students, nameToBloodtype(student.name, students)).length > donorNumber
-            mostDonors = [student]
-            donorNumber = bloodStudents(students, nameToBloodtype(student.name, students)).length
-        elsif bloodStudents(students, nameToBloodtype(student.name, students)).length == donorNumber
-            mostDonors.push(student)
+        mostDonors = []
+        donorNumber = 0
+        students.each do |student|
+            if bloodStudents(students, nameToBloodtype(student.name, students)).length > donorNumber
+                mostDonors = [student]
+                donorNumber = bloodStudents(students, nameToBloodtype(student.name, students)).length
+            elsif bloodStudents(students, nameToBloodtype(student.name, students)).length == donorNumber
+                mostDonors.push(student)
+            end
         end
-    end
     return [mostDonors, donorNumber]
 end
 
@@ -127,9 +164,14 @@ def writeToFile(content, name)
 end
 
 def secondLetterSort(students)
-    orderedNames, secondLetterNames,putFirstBack = [students[0].name], [], []
+    orderedNames = [students[0].name]
+    secondLetterNames = []
+    putFirstBack = []
+
     students.each{ |student| secondLetterNames.push(student.name.split("").drop(1).push(student.name[0]).join(""))}
+
     secondLetterNames.sort.each{ |name| putFirstBack.push(name.split("").take(name.length-1).unshift(name[name.length-1]).join(""))}
+
     return putFirstBack
 end
 
@@ -170,4 +212,3 @@ puts "Sort the students in alphebetical order according to the second letter of 
 puts secondLetterSort(students)
 
 writeToFile(fetchAttribute(mostDonors(students)[0], "name"), "problem7")
-
